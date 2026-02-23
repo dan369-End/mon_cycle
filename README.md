@@ -1,2 +1,0 @@
-# mon_cycle
-An application for women to easily track their menstrual cycle, predict their next period, identify fertile days, and receive personalized reminders.
