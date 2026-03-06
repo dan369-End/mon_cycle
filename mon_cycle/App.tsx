@@ -304,7 +304,8 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
                     <NavLink to="/calendar" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><CalendarIcon className="w-6 h-6" /><span className="text-[10px]">Calendrier</span></NavLink>
                     <NavLink to="/reports" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ReportsIcon className="w-6 h-6" /><span className="text-[10px]">Santé</span></NavLink>
                     <NavLink to="/assistant" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ChatBubbleLeftRightIcon className="w-6 h-6" /><span className="text-[10px]">IA</span></NavLink>
-                    <NavLink to="/settings" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><SettingsIcon className="w-6 h-6" /><span className="text-[10px]">Paramètres</span></nav>
+                    <NavLink to="/settings" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><SettingsIcon className="w-6 h-6" /><span className="text-[10px]">Paramètres</span></NavLink>
+                </nav>
                 <ProfileMenu isOpen={isMenuOpen} onClose={() => setMenuOpen(false)} />
                 <div className="fixed top-20 left-4 right-4 z-[150] space-y-2 pointer-events-none">
                     {toastNotifications.map(n => (

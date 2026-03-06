@@ -40,7 +40,7 @@ const adviceMap: Record<CyclePhase, Advice> = {
 
 
 export const getPersonalizedAdvice = (phase: CyclePhase, symptom?: SymptomLog): Advice => {
-    let baseAdvice = { ...adviceMap[phase] } || { ...defaultAdvice };
+    let baseAdvice = adviceMap[phase] || defaultAdvice;
     
     if (symptom) {
         // Personalize wellness advice based on pain
