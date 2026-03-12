@@ -61,7 +61,7 @@ const SignupScreen: React.FC = () => {
             const { error: signUpError } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin
+                    redirectTo: "https://mon-cycle.vercel.app"
                 }
             });
             
