@@ -8,6 +8,18 @@ const SettingsScreen: React.FC = () => {
     const { settings, setSettings, togglePregnancyMode, theme, toggleTheme, user, updateUser, logout, addToastNotification } = useAppContext();
     const [editName, setEditName] = useState(user?.name || '');
     const [photoPreview, setPhotoPreview] = useState<string | null>(user?.photoURL || null);
+    // ==============================
+// CONFIGURATION DU SUPPORT WHATSAPP
+// ==============================
+
+// Numéro WhatsApp du support (format international sans + ni espaces)
+const whatsappNumber = "242068550290";
+
+// Message automatique qui apparaîtra dans la conversation
+const whatsappMessage = "Bonjour, je viens de l'application Mon Cycle et j'ai besoin d'assistance.";
+
+// Construction du lien WhatsApp avec encodage du message
+const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
     useEffect(() => {
         if (user) {
@@ -249,7 +261,19 @@ const SettingsScreen: React.FC = () => {
                     </div>
                 </div>
             </div>
+{/* ==============================
+    BOUTON CONTACT SUPPORT WHATSAPP
+    Permet à l'utilisateur de contacter l'assistance
+================================= */}
 
+<a
+    href={whatsappLink} // lien WhatsApp généré plus haut
+    target="_blank" // ouvre WhatsApp dans un nouvel onglet
+    rel="noopener noreferrer"
+    className="w-full flex items-center justify-center py-4 bg-green-500 text-white font-bold rounded-2xl shadow-md transform active:scale-95 transition"
+>
+    Contacter le support WhatsApp
+</a>
             <button onClick={logout} className="w-full py-4 text-red-500 font-bold bg-red-50 dark:bg-red-900/20 rounded-2xl transform active:scale-95 transition">Déconnexion</button>
         </div>
     );
