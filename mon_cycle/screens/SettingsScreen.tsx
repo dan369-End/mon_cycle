@@ -270,9 +270,9 @@ const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     href={whatsappLink} // lien WhatsApp généré plus haut
     target="_blank" // ouvre WhatsApp dans un nouvel onglet
     rel="noopener noreferrer"
-    className="w-full flex items-center justify-center py-4 bg-green-500 text-white font-bold rounded-2xl shadow-md transform active:scale-95 transition"
+    className="w-full flex items-center justify-center py-4 bg-teal-600 text-white font-bold rounded-2xl shadow-md transform active:scale-95 transition"
 >
-    Contacter le support WhatsApp
+    Nous Contacter sur WhatsApp
 </a>
             <button onClick={logout} className="w-full py-4 text-red-500 font-bold bg-red-50 dark:bg-red-900/20 rounded-2xl transform active:scale-95 transition">Déconnexion</button>
         </div>
