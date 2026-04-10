@@ -22,9 +22,9 @@ import { CycleSettings, PeriodEntry, SymptomLog, ActivityLog, User, Notification
 const AppContext = createContext<AppContextType | null>(null);
 
 export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) throw new Error("useAppContext must be used within an AppProvider");
-  return context;
+    const context = useContext(AppContext);
+    if (!context) throw new Error("useAppContext must be used within an AppProvider");
+    return context;
 };
 
 const App: React.FC = () => {
@@ -50,7 +50,7 @@ const App: React.FC = () => {
             clearTimeout(safetyTimer);
         };
     }, []);
-    
+
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-screen bg-primary-bg-light dark:bg-primary-bg-dark">
@@ -60,8 +60,8 @@ const App: React.FC = () => {
                         <LoadingSpinner className="w-8 h-8 text-accent-light/30" />
                     </div>
                 </div>
-                <p className="mt-6 text-xs text-accent-light font-bold uppercase tracking-widest animate-pulse">Initialisation Supabase...</p>
-                <p className="mt-2 text-[10px] text-text-muted-light">Vérification de la session sécurisée</p>
+                <p className="mt-6 text-xs text-accent-light font-bold uppercase tracking-widest animate-pulse">Chargement ......</p>
+                <p className="mt-2 text-[10px] text-text-muted-light">Votre session est sécurisée</p>
             </div>
         );
     }
@@ -78,7 +78,7 @@ const App: React.FC = () => {
 };
 
 const AuthRoutes: React.FC = () => {
-    const authContextValue = { login: db.apiLogin, signup: db.apiSignup } as any; 
+    const authContextValue = { login: db.apiLogin, signup: db.apiSignup } as any;
     return (
         <AppContext.Provider value={authContextValue}>
             <Routes>
@@ -92,9 +92,9 @@ const AuthRoutes: React.FC = () => {
 };
 
 const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> = ({ user, firebaseUser }) => {
-    const [settings, setSettings] = useState<CycleSettings>({ 
-        cycleLength: 28, 
-        periodLength: 5, 
+    const [settings, setSettings] = useState<CycleSettings>({
+        cycleLength: 28,
+        periodLength: 5,
         isPregnancyMode: false,
         isTryingToConceive: false,
         isDiscreetMode: false,
@@ -103,14 +103,14 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
             vitamins: { enabled: false, time: '09:00' }
         },
         security: { pinEnabled: false, pinCode: '' },
-        notifications: { 
-            period: true, 
-            ovulation: true, 
-            custom: { 
-                beforePeriod: { enabled: true, days: 2 }, 
-                beforeOvulation: { enabled: true, days: 1 } 
-            } 
-        } 
+        notifications: {
+            period: true,
+            ovulation: true,
+            custom: {
+                beforePeriod: { enabled: true, days: 2 },
+                beforeOvulation: { enabled: true, days: 1 }
+            }
+        }
     });
     const [periodHistory, setPeriodHistory] = useState<PeriodEntry[]>([]);
     const [symptomHistory, setSymptomHistory] = useState<SymptomLog[]>([]);
@@ -119,7 +119,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
     const [toastNotifications, setToastNotifications] = useState<Notification[]>([]);
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [isMenuOpen, setMenuOpen] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); 
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (!firebaseUser.uid) return;
@@ -130,7 +130,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
         const unsubNotifications = db.subscribeToAppNotifications(firebaseUser.uid, setAppNotifications);
         return () => {
             [unsubSettings, unsubPeriod, unsubSymptoms, unsubActivity, unsubNotifications].forEach(u => {
-                if (typeof u === 'function') try { u(); } catch(e){}
+                if (typeof u === 'function') try { u(); } catch (e) { }
             });
         };
     }, [firebaseUser.uid]);
@@ -139,7 +139,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
         setIsSubmitting(true);
         try {
             await db.saveSettings(firebaseUser.uid, newSettings);
-            setSettings(newSettings); 
+            setSettings(newSettings);
         } catch (e: any) {
             addToastNotification({ message: `Erreur : ${e.message}` });
         } finally {
@@ -155,8 +155,8 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
 
     const addPeriodEntry = async (date: Date) => {
         if (periodHistory.length > 0) {
-            addToastNotification({ 
-                message: "Vous avez déjà un cycle enregistré. Pour en ajouter un nouveau, vous devez d'abord supprimer le cycle actuel." 
+            addToastNotification({
+                message: "Vous avez déjà un cycle enregistré. Pour en ajouter un nouveau, vous devez d'abord supprimer le cycle actuel."
             });
             return;
         }
@@ -166,7 +166,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
             await db.addPeriod(firebaseUser.uid, date);
             addToastNotification({ message: "Cycle enregistré avec succès !" });
             await db.addAppNotification(firebaseUser.uid, "Nouveau cycle enregistré.");
-            
+
             const updated = await db.getPeriods(firebaseUser.uid);
             if (updated) {
                 setPeriodHistory(updated.map(p => ({
@@ -224,7 +224,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
         const dateStr = date.toISOString().split('T')[0];
         const existing = symptomHistory.find(s => s.date === dateStr);
         const log = existing ? { ...existing, waterIntake: glasses } : { date: dateStr, mood: 'calme' as const, pain: 'aucune' as const, flow: 'aucune' as const, waterIntake: glasses };
-        try { await db.saveSymptom(firebaseUser.uid, log); } catch (e) {}
+        try { await db.saveSymptom(firebaseUser.uid, log); } catch (e) { }
     };
 
     const toggleTheme = () => {
@@ -235,18 +235,49 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
 
     const lastPeriod = useMemo(() => {
         if (periodHistory.length === 0) return null;
-        return [...periodHistory].sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())[0];
+        return [...periodHistory].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())[0];
     }, [periodHistory]);
 
     const predictions = useMemo(() => {
-        if (!lastPeriod) return { nextPeriodDate: null, ovulationDate: null, fertileWindow: null, nextPeriodWindow: null };
-        const start = new Date(lastPeriod.startDate);
-        const next = addDays(start, settings.cycleLength);
-        const ovulation = subDays(next, 14);
+        if (!lastPeriod) return {
+            nextPeriodDate: null,
+            ovulationDate: null,
+            fertileWindow: null,
+            nextPeriodWindow: null
+        };
+
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        const lastStart = new Date(lastPeriod.startDate);
+        const cycleLength = settings.cycleLength;
+        const periodLength = settings.periodLength;
+
+        // ✅ Détermine le cycle courant basé sur aujourd'hui
+        let currentCycleStart = new Date(lastStart);
+
+        while (addDays(currentCycleStart, cycleLength) <= today) {
+            currentCycleStart = addDays(currentCycleStart, cycleLength);
+        }
+
+        // Calcule le prochain cycle
+        const nextCycleStart = addDays(currentCycleStart, cycleLength);
+        const nextPeriodStart = nextCycleStart;
+        const nextPeriodEnd = addDays(nextPeriodStart, periodLength - 1);
+
+        // Calcule l'ovulation du prochain cycle
+        const nextCycleEnd = addDays(nextCycleStart, cycleLength);
+        const ovulationDate = subDays(nextCycleEnd, 14);
+
         return {
-            nextPeriodDate: next, ovulationDate: ovulation,
-            fertileWindow: { start: subDays(ovulation, 5), end: addDays(ovulation, 1) },
-            nextPeriodWindow: { start: next, end: addDays(next, settings.periodLength - 1) }
+            nextPeriodDate: nextPeriodStart,
+            ovulationDate: ovulationDate,
+            fertileWindow: {
+                start: subDays(ovulationDate, 5),
+                end: addDays(ovulationDate, 1)
+            },
+            nextPeriodWindow: {
+                start: nextPeriodStart,
+                end: nextPeriodEnd
+            }
         };
     }, [lastPeriod, settings]);
 
@@ -254,7 +285,7 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
 
     return (
         <AppContext.Provider value={{
-            settings, setSettings: updateSettings, periodHistory, addPeriodEntry, removePeriodEntry, updatePeriodEntry: () => {},
+            settings, setSettings: updateSettings, periodHistory, addPeriodEntry, removePeriodEntry, updatePeriodEntry: () => { },
             symptomHistory, addSymptomLog, updateWaterIntake, activityHistory, addActivityLog, removeActivityLog: (entry) => db.removeActivity(firebaseUser.uid, typeof entry === 'string' ? entry : entry.id),
             isPregnancyMode: settings.isPregnancyMode, togglePregnancyMode: () => updateSettings({ ...settings, isPregnancyMode: !settings.isPregnancyMode }),
             theme, toggleTheme, user, logout: db.apiLogout, updateUser: (name, _photo) => db.updateUserProfile(firebaseUser.uid, { name }), deleteAccount: () => db.deleteUserAccount(firebaseUser.uid),
@@ -300,11 +331,11 @@ const LoggedInApp: React.FC<{ user: User | null; firebaseUser: FirebaseUser; }> 
                     </Routes>
                 </main>
                 <nav className="absolute bottom-0 left-0 right-0 h-16 bg-white/90 dark:bg-card-bg-dark/90 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 flex justify-around items-center px-2">
-                    <NavLink to="/" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><HomeIcon className="w-6 h-6" /><span className="text-[10px]">Accueil</span></NavLink>
-                    <NavLink to="/calendar" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><CalendarIcon className="w-6 h-6" /><span className="text-[10px]">Calendrier</span></NavLink>
-                    <NavLink to="/reports" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ReportsIcon className="w-6 h-6" /><span className="text-[10px]">Santé</span></NavLink>
-                    <NavLink to="/assistant" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ChatBubbleLeftRightIcon className="w-6 h-6" /><span className="text-[10px]">IA</span></NavLink>
-                    <NavLink to="/settings" className={({isActive}) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><SettingsIcon className="w-6 h-6" /><span className="text-[10px]">Paramètres</span></NavLink>
+                    <NavLink to="/" className={({ isActive }) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><HomeIcon className="w-6 h-6" /><span className="text-[10px]">Accueil</span></NavLink>
+                    <NavLink to="/calendar" className={({ isActive }) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><CalendarIcon className="w-6 h-6" /><span className="text-[10px]">Calendrier</span></NavLink>
+                    <NavLink to="/reports" className={({ isActive }) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ReportsIcon className="w-6 h-6" /><span className="text-[10px]">Santé</span></NavLink>
+                    <NavLink to="/assistant" className={({ isActive }) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><ChatBubbleLeftRightIcon className="w-6 h-6" /><span className="text-[10px]">IA</span></NavLink>
+                    <NavLink to="/settings" className={({ isActive }) => `flex flex-col items-center p-2 ${isActive ? 'text-accent-light' : 'text-gray-400'}`}><SettingsIcon className="w-6 h-6" /><span className="text-[10px]">Paramètres</span></NavLink>
                 </nav>
                 <ProfileMenu isOpen={isMenuOpen} onClose={() => setMenuOpen(false)} />
                 <div className="fixed top-20 left-4 right-4 z-[150] space-y-2 pointer-events-none">

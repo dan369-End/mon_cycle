@@ -27,8 +27,10 @@ const HomeScreen: React.FC = () => {
 
   const cycleInfo = useMemo(() => {
     if (!lastPeriod || settings.isPregnancyMode) return null;
-    const start = new Date(new Date(lastPeriod.startDate).setHours(0, 0, 0, 0));
-    const dayOfCycle = differenceInDays(today, start) + 1;
+   const start = new Date(new Date(lastPeriod.startDate).setHours(0, 0, 0, 0));
+const fullCycle = settings.cycleLength;
+const cycleDaysElapsed = differenceInDays(today, start);
+const dayOfCycle = ((cycleDaysElapsed % fullCycle) + fullCycle) % fullCycle + 1;
     
     let phase = settings.isDiscreetMode ? "Phase A" : "Règles";
     let phaseKey = CyclePhase.Menstrual;
